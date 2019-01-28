@@ -37,9 +37,10 @@ class critical_wait_flag {
 
 class invalid_set_error : public std::exception {
  public:
-  const char *what() const noexcept override;
+  const char *what() const noexcept override {
+    return "flag should be set after entering critical section";
+  }
 };
-
 template<typename flag_type>
 critical_wait_flag<flag_type>::critical_wait_flag() {
   mCriticalFlag = false;
@@ -99,7 +100,5 @@ bool critical_wait_flag<flag_type>::in_critical_section() {
   return mCriticalFlag;
 }
 
-const char *invalid_set_error::what() const noexcept {
-  return "flag should be set after entering critical section";
-}
+
 #endif //CRITICAL_WAIT_FLAGS_CRITICAL_WAIT_FLAGS_H
