@@ -40,7 +40,6 @@ class invalid_set_error : public std::exception {
   const char *what() const noexcept override;
 };
 
-
 template<typename flag_type>
 critical_wait_flag<flag_type>::critical_wait_flag() {
   mCriticalFlag = false;
@@ -61,9 +60,13 @@ void critical_wait_flag<flag_type>::set_flag(flag_type flag) {
 
 template<typename flag_type>
 void critical_wait_flag<flag_type>::set_flag_blocking(flag_type flag) {
-  enter_critical();
-  set_flag(flag);
-  exit_critical();
+  if (mCriticalFlag) {
+    mFlag = flag;
+  } else {
+    enter_critical();
+    set_flag(flag);
+    exit_critical();
+  }
 }
 
 template<typename flag_type>
